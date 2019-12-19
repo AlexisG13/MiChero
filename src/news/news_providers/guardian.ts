@@ -1,4 +1,4 @@
-import { ProviderDto } from '../dto/provider.dto';
+import { ProviderDto, newsProviders } from '../dto/provider.dto';
 import { Guardian, News } from '../interfaces /news.interface';
 
 const apiKey = 'b104419d-7770-4fff-bd3e-a3489810e322';
@@ -16,5 +16,6 @@ function parser(res: Guardian): News[] {
     };
   });
 }
-
 export const guardianProvider = new ProviderDto<Guardian>(apiKey, url, parser);
+
+newsProviders.set('guardian', guardianProvider);

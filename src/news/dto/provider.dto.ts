@@ -1,4 +1,5 @@
 import { News, NYTimes } from '../interfaces /news.interface';
+import { guardianProvider } from '../news_providers/guardian';
 
 export class ProviderDto<T> {
   apiKey: string;
@@ -10,3 +11,5 @@ export class ProviderDto<T> {
     this.parser = parser;
   }
 }
+
+export const newsProviders = new Map();
