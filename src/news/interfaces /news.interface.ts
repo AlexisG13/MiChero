@@ -3,6 +3,7 @@ export interface News {
   title: string;
   sectionName: string;
   documentType: string;
+  author: string;
   publicationDate: Date | string;
   webUrl: string;
 }
@@ -14,6 +15,9 @@ export interface NYTimes {
         headline: { main: string };
         section_name: string;
         document_type: string;
+        byline: {
+          original: string;
+        };
         _id: string;
         pub_date: string;
         web_url: string;
@@ -32,6 +36,9 @@ export interface Guardian {
         id: string;
         webPublicationDate: string;
         webUrl: string;
+        fields: {
+          byline: string;
+        };
       },
     ];
   };

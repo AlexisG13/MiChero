@@ -11,5 +11,3 @@ export class ProviderDto<T> {
     this.parser = parser;
   }
 }
-
-export const newsProviders = new Map();

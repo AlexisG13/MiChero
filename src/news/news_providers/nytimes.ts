@@ -1,9 +1,9 @@
 import { NYTimes, News } from '../interfaces /news.interface';
-import { ProviderDto, newsProviders } from '../dto/provider.dto';
+import { ProviderDto } from '../dto/provider.dto';
 
 const apiKey = '9TAwfpEOCD4BeAFyywWv0vjzm9Udwt0O';
 const url = `https://api.nytimes.com/svc/search/v2/articlesearch.json?&fl=headline,section_name,
-   document_type,_id,pub_date,web_url`;
+   document_type,_id,pub_date,web_url,byline`;
 
 function parser(res: NYTimes): News[] {
   return res.response.docs.map(nyNew => {
@@ -11,6 +11,7 @@ function parser(res: NYTimes): News[] {
       id: nyNew._id,
       title: nyNew.headline.main,
       sectionName: nyNew.section_name,
+      author: nyNew.byline.original,
       documentType: nyNew.document_type,
       publicationDate: nyNew.pub_date,
       webUrl: nyNew.web_url,
@@ -19,5 +20,3 @@ function parser(res: NYTimes): News[] {
 }
 
 export const nyTimesProvider = new ProviderDto<NYTimes>(apiKey, url, parser);
-
-newsProviders.set('ny', nyTimesProvider);

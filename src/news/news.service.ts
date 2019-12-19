@@ -1,9 +1,9 @@
 import { Injectable, HttpService, BadRequestException } from '@nestjs/common';
-import { map, reduce } from 'rxjs/operators';
-import { Observable, merge, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable, forkJoin } from 'rxjs';
 import { News } from './interfaces /news.interface';
 import { NewsFilterDto } from './dto/get_news_filter.dto';
-import { ProviderDto, newsProviders } from './dto/provider.dto';
+import { ProviderDto } from './dto/provider.dto';
 import { guardianProvider } from './news_providers/guardian';
 import { nyTimesProvider } from './news_providers/nytimes';
 
@@ -11,32 +11,34 @@ import { nyTimesProvider } from './news_providers/nytimes';
 export class NewsService {
   constructor(private readonly httpService: HttpService) {}
 
-  searchNews(newsFilterDto: NewsFilterDto): Observable<News[]> {
-    switch (newsFilterDto.provider) {
-      case undefined:
-        return this.searchAllProviders(newsFilterDto);
-      case 'guardian':
-        return this.search(newsFilterDto.search, guardianProvider);
-      case 'ny':
-        return this.search(newsFilterDto.search, nyTimesProvider);
-      default:
-        throw new BadRequestException('Unsupported provider');
-    }
-  }
+  availableProviders = new Map()
+    .set('ny', nyTimesProvider)
+    .set('guardian', guardianProvider);
 
-  searchAllProviders(newsFilterDto: NewsFilterDto): Observable<News[]> {
+  searchAllProviders(search: string): Observable<News[]> {
     const news: Array<Observable<News[]>> = [];
-    newsProviders.forEach(provider => {
-      news.push(this.search(newsFilterDto.search, provider));
+    this.availableProviders.forEach(provider => {
+      news.push(this.searchSingleProvider(search, provider));
     });
     return forkJoin(...news);
   }
 
-  search<T>(search: string, provider: ProviderDto<T>): Observable<News[]> {
+  searchSingleProvider<T>(search: string, provider: ProviderDto<T>): Observable<News[]> {
     const query = provider.url + `&q=${search}&api-key=${provider.apiKey}`;
     return this.httpService.get<T>(query).pipe(
       map(res => res.data),
       map(provider.parser),
     );
+  }
+
+  searchNews(newsFilterDto: NewsFilterDto): Observable<News[]> {
+    if (!newsFilterDto.provider) {
+      return this.searchAllProviders(newsFilterDto.search);
+    }
+    const newsProvider = this.availableProviders.get(newsFilterDto.provider);
+    if (!newsProvider) {
+      throw new BadRequestException('Unknown provider');
+    }
+    return this.searchSingleProvider(newsFilterDto.search, newsProvider);
   }
 }
