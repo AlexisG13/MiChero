@@ -1,7 +1,6 @@
 import { NYTimes, News } from '../interfaces /news.interface';
 import { ProviderDto } from '../dto/provider.dto';
 
-const apiKey = '9TAwfpEOCD4BeAFyywWv0vjzm9Udwt0O';
 const url = `https://api.nytimes.com/svc/search/v2/articlesearch.json?&fl=headline,section_name,
    document_type,_id,pub_date,web_url,byline`;
 
@@ -19,4 +18,4 @@ function parser(res: NYTimes): News[] {
   });
 }
 
-export const nyTimesProvider = new ProviderDto<NYTimes>(apiKey, url, parser);
+export const nyTimesProvider = new ProviderDto<NYTimes>(url, parser);

@@ -1,7 +1,6 @@
 import { ProviderDto} from '../dto/provider.dto';
 import { Guardian, News } from '../interfaces /news.interface';
 
-const apiKey = 'b104419d-7770-4fff-bd3e-a3489810e322';
 const url = 'https://content.guardianapis.com/search?&show-fields=byline';
 
 function parser(res: Guardian): News[] {
@@ -17,4 +16,4 @@ function parser(res: Guardian): News[] {
     };
   });
 }
-export const guardianProvider = new ProviderDto<Guardian>(apiKey, url, parser);
+export const guardianProvider = new ProviderDto<Guardian>(url, parser);

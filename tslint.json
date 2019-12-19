@@ -11,8 +11,6 @@
       true,
       "call-signature",
       "parameter",
-      "object-destructuring",
-      "array-destructuring"
     ],
     "member-access": [false],
     "ordered-imports": [false],
