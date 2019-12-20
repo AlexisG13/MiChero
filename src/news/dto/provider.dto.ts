@@ -11,7 +11,7 @@ export class ProviderDto<T> {
     this.parser = parser;
   }
 
-  init(apiKey: string | undefined) {
+  init(apiKey: string | undefined): ProviderDto<T> {
     this.apiKey = apiKey ? apiKey : '';
     return this;
   }

@@ -5,12 +5,12 @@
     "no-unused-expression": true
   },
   "rules": {
+    "no-any":true,
     "quotemark": [true, "single"],
-    "strict": true,
     "typedef": [
       true,
       "call-signature",
-      "parameter",
+      "parameter"
     ],
     "member-access": [false],
     "ordered-imports": [false],

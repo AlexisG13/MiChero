@@ -8,8 +8,10 @@ export class ValidationJWTGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<Request>();
     if (!req.query.provider || req.query.provider === 'ny') {
       if (req.headers) {
-        const token = <string>req.headers['authorization'];
-        if (!token) return false;
+        const token = req.headers.authorization as string;
+        if (!token) {
+          return false;
+        }
         try {
           verify(token.split(' ')[1], 'secretKey');
           return true;
